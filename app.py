@@ -2,7 +2,7 @@ import json
 from flask import Flask, Response
 from model import download_data
 import os
-from model import predict_price
+from model import forecast_price
 
 API_PORT = int(os.environ.get('API_PORT', 5000))
 
@@ -13,6 +13,8 @@ def update_data():
     tokens = ["ETH", "BNB", "ARB"]
     for token in tokens:
         download_data(token)
+def get_token_inference(token):
+    return forecast_price.get(token, 0)
 
 @app.route("/inference/<string:token>")
 def generate_inference(token):
@@ -22,7 +24,7 @@ def generate_inference(token):
         return Response(json.dumps({"error": error_msg}), status=400, mimetype='application/json')
 
     try:
-        inference = predict_price(token)
+        inference = get_token_inference(token)
         return Response(str(inference), status=200)
     except Exception as e:
         return Response(json.dumps({"error": str(e)}), status=500, mimetype='application/json')

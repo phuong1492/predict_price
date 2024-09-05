@@ -83,6 +83,7 @@ def download_data(token):
     if not os.path.exists(download_path):
         os.makedirs(download_path)
     combined_df.to_csv(file_path, index=False)
+    forecast_price[token] = predict_price(token)
     print(f"Updated data for {token} saved to {file_path}. Total rows: {len(combined_df)}")
 
 

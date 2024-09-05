@@ -87,7 +87,7 @@ def download_data(token):
     print(f"Updated data for {token} saved to {file_path}. Total rows: {len(combined_df)}")
 
 
-def predict_price(token, period="20T"):
+def predict_price(token, period="10T"):
     download_path = os.path.join(binance_data_path, token.lower())
     file_path = os.path.join(download_path, f"{token.lower()}_5m_data.csv")
     df = pd.read_csv(file_path)
@@ -117,7 +117,7 @@ def predict_price(token, period="20T"):
     return adjusted_price
 
 def update_data():
-    tokens = ["ETH", "BNB", "ARB"]
+    tokens = ["ETH", "BTC", "SOL"]
     for token in tokens:
         download_data(token)
 

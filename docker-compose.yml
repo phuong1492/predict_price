@@ -1,16 +1,14 @@
 services:
   inference:
-    container_name: allora-inference-3
+    container_name: allora-inference-1
     build:
       context: .
     command: python -u /app/app.py
-    environment:
-      - API_PORT=8013
     ports:
-      - "8013:8013"
+      - "8011:8011"
     healthcheck:
-      # test: ["CMD", "curl", "-f", "http://localhost:8013/inference/ETH"]
-      test: ["CMD-SHELL", "curl -f http://localhost:8013/inference/ETH || exit 1 && curl -f http://localhost:8013/inference/BNB || exit 1 && curl -f http://localhost:8013/inference/ARB || exit 1"]
+      # test: ["CMD", "curl", "-f", "http://localhost:8011/inference/ETH"]
+      test: ["CMD-SHELL", "curl -f http://localhost:8011/inference/ETH || exit 1 && curl -f http://localhost:8011/inference/BTC || exit 1 && curl -f http://localhost:8011/inference/SOL || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 12
@@ -19,10 +17,10 @@ services:
       - ./inference-data:/app/data
   
   updater:
-    container_name: allora-updater-3
+    container_name: allora-updater-1
     build: .
     environment:
-      - INFERENCE_API_ADDRESS=http://inference:8013
+      - INFERENCE_API_ADDRESS=http://inference:8011
     command: >
       sh -c "
       while true; do
@@ -35,7 +33,7 @@ services:
         condition: service_healthy
     
   worker:
-    container_name: allora-worker-3
+    container_name: allora-worker-1
     image: alloranetwork/allora-offchain-node:latest
     volumes:
       - ./worker-data:/data
